@@ -21,7 +21,13 @@ public class ArticleService {
     public List<Article> findArticleByTagsId(int tagId){
         return articleDao.findArticleByTag(tagId);
     }
-    public void addArticle(Article article){
-        articleDao.addArticle(article);
+    public boolean addArticle(Article article){
+        return articleDao.addArticle(article);
+    }
+    public boolean deleteArticleByArticleId(int articleId){
+        return articleDao.deleteArticleByArticleId(articleId);
+    }
+    public boolean updateArticle(Article article){
+        return articleDao.updateArticle(article);
     }
 }

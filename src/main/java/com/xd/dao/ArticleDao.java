@@ -37,7 +37,7 @@ public class ArticleDao {
         return articles;
     }
 
-    public void addArticle(Article article){
+    public boolean addArticle(Article article){
         String sqlStr = "INSERT INTO t_article(" +
                 "article_title, " +
                 "article_author, " +
@@ -45,12 +45,47 @@ public class ArticleDao {
                 "article_status, " +
                 "user_id" +
                 ") VALUES(?, ?, ?, ?, ?)";
-        int opRes = jdbcTemplate.update(sqlStr, new Object[]{article.getArticleTitle(),
+        System.out.println(article.getArticleTitle());
+        System.out.println(article.getArticleAuthor());
+        System.out.println(article.getArticleContent());
+        System.out.println(article.getArticleStatus());
+        System.out.println(article.getUserId());
+        int opRes = jdbcTemplate.update(sqlStr, new Object[]{
+                article.getArticleTitle(),
                 article.getArticleAuthor(),
                 article.getArticleContent(),
                 article.getArticleStatus(),
                 article.getUserId()
         });
-        System.out.println("operation result is:" + opRes);
+        System.out.println(opRes);
+        if(opRes > 0)
+            return true;
+        else return false;
+    }
+
+    public boolean deleteArticleByArticleId(final int articleId){
+        String sqlStr = "DELETE FROM t_article where article_id = ?";
+        int opRes = jdbcTemplate.update(sqlStr, new Object[]{articleId});
+
+        if(opRes > 0)
+            return true;
+        else return false;
+    }
+
+    public boolean updateArticle(Article article){
+        String sqlStr = "UPDATE t_article SET " +
+                "article_title = ?, " +
+                "article_content = ?, " +
+                "article_status = ? " +
+                " WHERE article_id = ?";
+        int opRes = jdbcTemplate.update(sqlStr, new Object[]{
+                article.getArticleTitle(),
+                article.getArticleContent(),
+                article.getArticleStatus(),
+                article.getArticleId()
+        });
+        if(opRes > 0)
+            return true;
+        else return false;
     }
 }

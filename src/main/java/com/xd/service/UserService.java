@@ -14,13 +14,22 @@ public class UserService {
     @Autowired
     private LoginLogDao loginLogDao;
 
-    public boolean hasMatchUser(String userName, String password){
-        int matchCount = userDao.getMatchCount(userName, password);
+    public boolean hasMatchUser(User user){
+        int matchCount = userDao.getMatchCount(user.getUserName(), user.getPassword());
         return matchCount > 0;
+    }
+
+    public boolean addUser(User user){
+        boolean isSuccess = userDao.addUser(user);
+        return isSuccess;
     }
 
     public User findUserByName(String userName){
         return userDao.findUserByUserName(userName);
+    }
+
+    public User findUserByUserId(int userId) {
+        return userDao.findUserByUserId(userId);
     }
 
     public void loginSuccess(User user){

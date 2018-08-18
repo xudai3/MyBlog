@@ -16,6 +16,8 @@ public class Article implements Serializable {
     private Date createDate;
     private Date changeDate;
 
+    public Article(){}
+
     public int getArticleId() {
         return articleId;
     }

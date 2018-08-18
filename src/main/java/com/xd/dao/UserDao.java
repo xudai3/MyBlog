@@ -35,6 +35,23 @@ public class UserDao {
         });
         return user;
     }
+    public User findUserByUserId(final int userId){
+        String sqlStr = "select user_id, user_name, credits" + " from t_user where user_id = ?";
+        final User user = new User();
+        jdbcTemplate.query(sqlStr, new Object[]{userId}, new RowCallbackHandler() {
+            @Override
+            public void processRow(ResultSet resultSet) throws SQLException {
+                user.setUserId(userId);
+                user.setUserName(resultSet.getString("user_name"));
+                user.setCredits(resultSet.getInt("credits"));
+            }
+        });
+        return user;
+    }
+
+    public boolean addUser(User user){
+        return true;
+    }
 
     public void updateLoginInfo(User user){
         String sqlStr = "update t_user set last_visit = ?, last_ip = ?, credits = ?" + " where user_id = ?";
