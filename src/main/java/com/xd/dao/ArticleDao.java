@@ -43,18 +43,20 @@ public class ArticleDao {
                 "article_author, " +
                 "article_content, " +
                 "article_status, " +
+                "create_date, " +
                 "user_id" +
-                ") VALUES(?, ?, ?, ?, ?)";
-        System.out.println(article.getArticleTitle());
-        System.out.println(article.getArticleAuthor());
-        System.out.println(article.getArticleContent());
-        System.out.println(article.getArticleStatus());
-        System.out.println(article.getUserId());
+                ") VALUES(?, ?, ?, ?, ?, ?)";
+//        System.out.println(article.getArticleTitle());
+//        System.out.println(article.getArticleAuthor());
+//        System.out.println(article.getArticleContent());
+//        System.out.println(article.getArticleStatus());
+//        System.out.println(article.getUserId());
         int opRes = jdbcTemplate.update(sqlStr, new Object[]{
                 article.getArticleTitle(),
                 article.getArticleAuthor(),
                 article.getArticleContent(),
                 article.getArticleStatus(),
+                article.getCreateDate(),
                 article.getUserId()
         });
         System.out.println(opRes);
@@ -76,12 +78,14 @@ public class ArticleDao {
         String sqlStr = "UPDATE t_article SET " +
                 "article_title = ?, " +
                 "article_content = ?, " +
-                "article_status = ? " +
+                "article_status = ?, " +
+                "change_date = ? " +
                 " WHERE article_id = ?";
         int opRes = jdbcTemplate.update(sqlStr, new Object[]{
                 article.getArticleTitle(),
                 article.getArticleContent(),
                 article.getArticleStatus(),
+                article.getChangeDate(),
                 article.getArticleId()
         });
         if(opRes > 0)

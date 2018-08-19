@@ -1,60 +1,53 @@
 package com.xd.response;
 
-public class Response {
+import java.io.Serializable;
+
+public class Response implements Serializable{
     private static final String OK = "ok";
     private static final String ERROR = "error";
 
-    private Meta meta;
+    private Integer code;
+    private String message;
     private Object data;
 
+    public Response() {}
+
+    public Response(Integer code, String message){
+        this.code = code;
+        this.message = message;
+    }
+
     public Response success(){
-        this.meta = new Meta(true, OK);
+//        Response resp = new Response();
+//        resp.setStatusCode(StatusCode.SUCCESS);
+        setStatusCode(StatusCode.SUCCESS);
         return this;
     }
 
     public Response success(Object data){
-        this.meta = new Meta(true, OK);
+        setStatusCode(StatusCode.SUCCESS);
         this.data = data;
         return this;
     }
 
-    public Response failure(){
-        this.meta = new Meta(false, ERROR);
+    public Response failure(StatusCode statusCode){
+        setStatusCode(statusCode);
         return this;
     }
 
-    public Response failure(String message){
-        this.meta = new Meta(false, message);
+    public Response failure(StatusCode statusCode, Object data){
+        setStatusCode(statusCode);
+        this.data = data;
         return this;
     }
 
-    public Meta getMeta(){
-        return meta;
+    public void setStatusCode(StatusCode statusCode){
+        this.code = statusCode.getCode();
+        this.message = statusCode.getMessage();
     }
 
     public Object getData(){
         return data;
     }
 
-    public class Meta{
-        private boolean success;
-        private String message;
-
-        public Meta(boolean success){
-            this.success = success;
-        }
-
-        public Meta(boolean success, String message){
-            this.success = success;
-            this.message = message;
-        }
-
-        public boolean isSuccess(){
-            return success;
-        }
-
-        public String getMessage(){
-            return message;
-        }
-    }
 }

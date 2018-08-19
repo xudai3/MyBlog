@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xd.domain.Article;
 import com.xd.domain.User;
 import com.xd.response.Response;
+import com.xd.response.StatusCode;
 import com.xd.service.ArticleService;
 import com.xd.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.util.WebUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 @CrossOrigin
 @RestController
@@ -26,10 +28,12 @@ public class ArticleController {
 
 
     @RequestMapping(
-            value = "/api/article/{aid}",
+            value = "/v1/articles/{aid}",
             method = RequestMethod.GET)
     public Response getArticle(HttpServletRequest request, @PathVariable("aid") int aid){
+        System.out.println("getting article...");
         Article article = articleService.findArticleByArticleId(aid);
+        System.out.println(article);
         ObjectMapper mapper  = new ObjectMapper();
         String jsonRes = null;
         Response resp = new Response();
@@ -44,7 +48,7 @@ public class ArticleController {
     }
 
     @RequestMapping(
-            value = "/api/article",
+            value = "/v1/articles",
             method = RequestMethod.POST,
             produces = "application/json",
             consumes = "application/json")
@@ -53,62 +57,34 @@ public class ArticleController {
         System.out.println("add article ing...");
         // System.out.println(article.getArticleTitle());
         // System.out.println(article.getArticleContent());
-        System.out.println(article.getUserId());
+        // System.out.println(article.getUserId());
         User articleUser = userService.findUserByUserId(article.getUserId());
         article.setArticleAuthor(articleUser.getUserName());
         article.setArticleStatus("public");
+        article.setCreateDate(new Date());
 
         boolean isSuccess = articleService.addArticle(article);
         if(isSuccess) return resp.success();
-        else return resp.failure();
+        else return resp.failure(StatusCode.DATA_IS_WRONG);
     }
 
-//    @RequestMapping(value = "/api/article", method = RequestMethod.POST)
-//    public Response addArticle(HttpServletRequest request){
-//        Article article = new Article();
-//        String articleJson = request.getParameter("data");
-//        System.out.println(articleJson);
-//        ObjectMapper mapper = new ObjectMapper();
-//        Article jsonArticle = new Article();
-//        try {
-//            jsonArticle = mapper.readValue(articleJson, Article.class);
-//        }catch (IOException e){
-//            e.printStackTrace();
-//        }
-//
-//        Response resp = new Response();
-//
-//        String articleTitle = jsonArticle.getArticleTitle();
-//        String articleContent = jsonArticle.getArticleContent();
-//        System.out.println(articleTitle);
-//        System.out.println(articleContent);
-//        User user = (User)WebUtils.getSessionAttribute(request,"user");
-//        System.out.println(user.getUserId());
-//        article.setArticleContent(articleContent);
-//        article.setArticleTitle(articleTitle);
-//        article.setArticleStatus("public");
-//        article.setArticleAuthor(user.getUserName());
-//        article.setUserId(user.getUserId());
-//        articleService.addArticle(article);
-//        return resp;
-//    }
-
     @RequestMapping(
-            value = "/api/article",
+            value = "/v1/articles",
             method = RequestMethod.PUT,
             produces = "application/json",
             consumes = "application/json")
     public Response editArticle(@RequestBody Article article){
         Response resp = new Response();
+        article.setChangeDate(new Date());
 
         boolean isSuccess = articleService.updateArticle(article);
 
         System.out.println("editing...");
         if(isSuccess) return resp.success();
-        else return resp.failure();
+        else return resp.failure(StatusCode.DATA_IS_WRONG);
     }
     @RequestMapping(
-            value = "/api/article",
+            value = "/v1/articles",
             method = RequestMethod.DELETE)
     public Response deleteArticle(@RequestParam("articleId") int articleId){
         Response resp = new Response();
@@ -116,39 +92,7 @@ public class ArticleController {
         System.out.println(articleId);
         boolean isSuccess = articleService.deleteArticleByArticleId(articleId);
         if(isSuccess) return resp.success();
-        else return resp.failure();
+        else return resp.failure(StatusCode.DATA_IS_WRONG);
     }
-
-//    @RequestMapping(value = "publish_article", method = RequestMethod.POST)
-//    @ResponseBody
-//    public String publishArticle(HttpServletRequest request, HttpServletResponse response){
-//        Article article = new Article();
-//        System.out.println("test ajax");
-//        String articleJson = request.getParameter("data");
-//        System.out.println(articleJson);
-//        ObjectMapper mapper = new ObjectMapper();
-//        Article jsonArticle = new Article();
-//        try {
-//            jsonArticle = mapper.readValue(articleJson, Article.class);
-//        }catch (IOException e){
-//            e.printStackTrace();
-//        }
-//
-//        String articleTitle = jsonArticle.getArticleTitle();
-//        String articleContent = jsonArticle.getArticleContent();
-//        System.out.println(articleTitle);
-//        System.out.println(articleContent);
-//        User user = (User)WebUtils.getSessionAttribute(request,"user");
-//        System.out.println(user.getUserId());
-//        article.setArticleContent(articleContent);
-//        article.setArticleTitle(articleTitle);
-//        article.setArticleStatus("public");
-//        article.setArticleAuthor(user.getUserName());
-//        article.setUserId(user.getUserId());
-//        articleService.addArticle(article);
-//        return "main";
-//    }
-
-
 
 }

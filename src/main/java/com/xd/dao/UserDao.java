@@ -2,12 +2,14 @@ package com.xd.dao;
 
 import com.xd.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Repository
 public class UserDao {
@@ -57,5 +59,11 @@ public class UserDao {
         String sqlStr = "update t_user set last_visit = ?, last_ip = ?, credits = ?" + " where user_id = ?";
         jdbcTemplate.update(sqlStr, new Object[]{user.getLastVisit(),
                 user.getLastIp(), user.getCredits(), user.getUserId()});
+    }
+
+    public List<User> getUserList(){
+        String sqlStr = "SELECT user_id, user_name, credits FROM t_user";
+        List<User> userList = jdbcTemplate.query(sqlStr, new BeanPropertyRowMapper<User>(User.class));
+        return userList;
     }
 }

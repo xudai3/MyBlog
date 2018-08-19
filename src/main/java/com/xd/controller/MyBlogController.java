@@ -24,7 +24,7 @@ public class MyBlogController {
     @Autowired
     ArticleService articleService;
 
-    @RequestMapping(value = "/api/user/{uid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/users/{uid}/articles", method = RequestMethod.GET)
     public Response initMainPage(@PathVariable int uid){
         System.out.println("Aricle List Init");
         //User user = (User) WebUtils.getSessionAttribute(request,"user");

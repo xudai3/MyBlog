@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xd.domain.User;
 import com.xd.response.Response;
+import com.xd.response.StatusCode;
 import com.xd.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,30 +23,14 @@ public class LoginController {
     //public String indexPage(){
     //    return "index";
     //}
-    @RequestMapping(value = "/api/{uid}/sign_out", method = RequestMethod.GET)
-    public Response signOut(){
+    @RequestMapping(value = "/v1/{uid}/sign_out", method = RequestMethod.GET)
+    public Response signOut(@PathVariable int uid){
         Response resp = new Response();
         return resp;
     }
 
-    @RequestMapping(value = "/api/user", method = RequestMethod.GET)
-    public Response getUserInfo(@RequestParam("userId") int userId){
-        Response resp = new Response();
-        User getUser = userService.findUserByUserId(userId);
-        ObjectMapper mapper = new ObjectMapper();
-        String res = null;
 
-        try {
-            res = mapper.writeValueAsString(getUser);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        System.out.println("getting user info...");
-
-        return resp.success(res);
-    }
-
-    @RequestMapping(value = "/api/sign_in", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
+    @RequestMapping(value = "/v1/sign_in", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public Response signIn(@RequestBody User user, HttpServletRequest request){
         System.out.println("sign_in...");
         //User user = new User();
@@ -56,7 +41,7 @@ public class LoginController {
         System.out.println(user.getUserName());
         System.out.println(user.getPassword());
         if(!isValidUser){
-            return resp.failure();
+            return resp.failure(StatusCode.USER_LOGIN_ERROR);
         }
 
         User loginUser = userService.findUserByName(user.getUserName());
@@ -81,7 +66,7 @@ public class LoginController {
         return resp.success(res);
 
     }
-    @RequestMapping(value = "/api/sign_up", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
+    @RequestMapping(value = "/v1/sign_up", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public Response signUp(){
         Response resp = new Response();
         return resp;

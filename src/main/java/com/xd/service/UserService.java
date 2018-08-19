@@ -7,6 +7,8 @@ import com.xd.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
     @Autowired
@@ -30,6 +32,10 @@ public class UserService {
 
     public User findUserByUserId(int userId) {
         return userDao.findUserByUserId(userId);
+    }
+
+    public List<User> getUserList(){
+        return userDao.getUserList();
     }
 
     public void loginSuccess(User user){
