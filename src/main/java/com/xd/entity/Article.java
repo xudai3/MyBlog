@@ -1,4 +1,4 @@
-package com.xd.domain;
+package com.xd.entity;
 
 import java.io.Serializable;
 import java.util.Date;

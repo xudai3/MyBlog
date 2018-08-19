@@ -1,6 +1,4 @@
-package com.xd.domain;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+package com.xd.entity;
 
 import java.io.Serializable;
 import java.util.Date;

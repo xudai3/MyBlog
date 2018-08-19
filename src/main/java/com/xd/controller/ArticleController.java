@@ -2,20 +2,16 @@ package com.xd.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xd.domain.Article;
-import com.xd.domain.User;
+import com.xd.entity.Article;
+import com.xd.entity.User;
 import com.xd.response.Response;
 import com.xd.response.StatusCode;
 import com.xd.service.ArticleService;
 import com.xd.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Date;
 
 @CrossOrigin
@@ -58,7 +54,7 @@ public class ArticleController {
         // System.out.println(article.getArticleTitle());
         // System.out.println(article.getArticleContent());
         // System.out.println(article.getUserId());
-        User articleUser = userService.findUserByUserId(article.getUserId());
+        User articleUser = userService.getUserByUserId(article.getUserId());
         article.setArticleAuthor(articleUser.getUserName());
         article.setArticleStatus("public");
         article.setCreateDate(new Date());

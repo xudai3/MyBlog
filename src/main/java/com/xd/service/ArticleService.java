@@ -1,7 +1,7 @@
 package com.xd.service;
 
 import com.xd.dao.ArticleDao;
-import com.xd.domain.Article;
+import com.xd.entity.Article;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

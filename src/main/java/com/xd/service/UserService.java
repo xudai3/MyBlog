@@ -2,8 +2,8 @@ package com.xd.service;
 
 import com.xd.dao.LoginLogDao;
 import com.xd.dao.UserDao;
-import com.xd.domain.LoginLog;
-import com.xd.domain.User;
+import com.xd.entity.LoginLog;
+import com.xd.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,21 +17,20 @@ public class UserService {
     private LoginLogDao loginLogDao;
 
     public boolean hasMatchUser(User user){
-        int matchCount = userDao.getMatchCount(user.getUserName(), user.getPassword());
+        int matchCount = userDao.getMatchCount(user);
         return matchCount > 0;
     }
 
-    public boolean addUser(User user){
-        boolean isSuccess = userDao.addUser(user);
-        return isSuccess;
+    public int addUser(User user){
+        return userDao.addUser(user);
     }
 
-    public User findUserByName(String userName){
-        return userDao.findUserByUserName(userName);
+    public User getUserByName(String userName){
+        return userDao.getUserByUserName(userName);
     }
 
-    public User findUserByUserId(int userId) {
-        return userDao.findUserByUserId(userId);
+    public User getUserByUserId(int userId) {
+        return userDao.getUserByUserId(userId);
     }
 
     public List<User> getUserList(){
