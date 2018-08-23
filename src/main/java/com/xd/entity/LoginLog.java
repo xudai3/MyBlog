@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class LoginLog implements Serializable {
     private int loginLogId;
-    private  int userId;
+    private int userId;
     private String ip;
     private Date loginDate;
 

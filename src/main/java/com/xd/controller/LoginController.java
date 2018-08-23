@@ -17,16 +17,12 @@ import java.util.Date;
 public class LoginController {
     @Autowired
     private UserService userService;
-    //@RequestMapping(value = "/")
-    //public String indexPage(){
-    //    return "index";
-    //}
+
     @RequestMapping(value = "/v1/{uid}/sign_out", method = RequestMethod.GET)
     public Response signOut(@PathVariable int uid){
         Response resp = new Response();
         return resp;
     }
-
 
     @RequestMapping(
             value = "/v1/sign_in",
@@ -35,28 +31,16 @@ public class LoginController {
             consumes = "application/json")
     public Response signIn(@RequestBody User user, HttpServletRequest request){
         System.out.println("sign_in...");
-        //User user = new User();
-        //user.setUserName(userName);
-        //user.setPassword(password);
+
         Response resp = new Response();
-        boolean isValidUser = userService.hasMatchUser(user);
+        boolean isValidUser = userService.countMatchLoginUser(user);
         System.out.println(user.getUserName());
         System.out.println(user.getPassword());
         if(!isValidUser){
             return resp.failure(StatusCode.USER_LOGIN_ERROR);
         }
 
-        User loginUser = userService.getUserByName(user.getUserName());
-
-        ObjectMapper mapper = new ObjectMapper();
-        String res = null;
-        try {
-            res = mapper.writeValueAsString(loginUser);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(res);
+        User loginUser = userService.getUserByUserName(user.getUserName());
 
         String loginIp = request.getRemoteAddr();
         Date loginDate = new Date();
@@ -65,7 +49,7 @@ public class LoginController {
 
         userService.loginSuccess(loginUser);
 
-        return resp.success(res);
+        return resp.success(loginUser);
 
     }
     @RequestMapping(value = "/v1/sign_up", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
@@ -73,24 +57,4 @@ public class LoginController {
         Response resp = new Response();
         return resp;
     }
-//    @RequestMapping(value = "/loginCheck")
-//    public ModelAndView loginCheck(HttpServletRequest request, LoginCommand loginCommand){
-//        boolean isValidUser = userService.hasMatchUser(loginCommand.getUserName(), loginCommand.getPassword());
-//        System.out.println("checking... " + loginCommand.getUserName() + " " +loginCommand.getPassword() + " " + isValidUser);
-//
-//        if (!isValidUser){
-//            return new ModelAndView("redirect:index");
-//        }else{
-//            System.out.println("Logging...");
-//            User user = userService.findUserByName(loginCommand.getUserName());
-//            System.out.println(user.getUserName());
-//            user.setLastIp(request.getLocalAddr());
-//            user.setLastVisit(new Date());
-//            userService.loginSuccess(user);
-//            request.getSession().setAttribute("user", user);
-//            System.out.println("returning view...");
-//
-//            return new ModelAndView("redirect:/u/"+user.getUserId());
-//        }
-//    }
 }

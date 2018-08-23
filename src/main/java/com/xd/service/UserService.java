@@ -5,9 +5,12 @@ import com.xd.dao.UserDao;
 import com.xd.entity.LoginLog;
 import com.xd.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService {
@@ -15,26 +18,58 @@ public class UserService {
     private UserDao userDao;
     @Autowired
     private LoginLogDao loginLogDao;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
-    public boolean hasMatchUser(User user){
-        int matchCount = userDao.getMatchCount(user);
+    public boolean countMatchLoginUser(User user){
+        int matchCount = userDao.countMatchLoginUser(user);
         return matchCount > 0;
     }
 
-    public int addUser(User user){
-        return userDao.addUser(user);
+    public boolean saveUser(User user){
+        boolean flag = false;
+        try{
+            userDao.saveUser(user);
+            flag = true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return flag;
+    }
+    public boolean removeUser(int userId){
+        boolean flag = false;
+        String key = "userId_" + userId;
+        ValueOperations<String, User> valueOperations = redisTemplate.opsForValue();
+        boolean hasKey = redisTemplate.hasKey(key);
+        if(hasKey){
+            System.out.println("Already has key:" + key);
+            redisTemplate.delete(key);
+        }
+        return flag;
+
     }
 
-    public User getUserByName(String userName){
+    public User getUserByUserName(String userName){
         return userDao.getUserByUserName(userName);
     }
 
     public User getUserByUserId(int userId) {
-        return userDao.getUserByUserId(userId);
+        String key = "userId_" + userId;
+        ValueOperations<String, User> valueOperations = redisTemplate.opsForValue();
+        boolean hasKey = redisTemplate.hasKey(key);
+        if(hasKey){
+            System.out.println("Already has key:" + key);
+            return valueOperations.get(key);
+        }
+        System.out.println("Have not found key:" + key);
+        User user = userDao.getUserByUserId(userId);
+        valueOperations.set(key, user, 2, TimeUnit.HOURS);
+        return user;
+        // return userDao.getUserByUserId(userId);
     }
 
-    public List<User> getUserList(){
-        return userDao.getUserList();
+    public List<User> listUsers(){
+        return userDao.listUsers();
     }
 
     public void loginSuccess(User user){
@@ -44,6 +79,6 @@ public class UserService {
         loginLog.setIp(user.getLastIp());
         loginLog.setLoginDate(user.getLastVisit());
         userDao.updateLoginInfo(user);
-        loginLogDao.insertLoginLog(loginLog);
+        loginLogDao.saveLoginLog(loginLog);
     }
 }

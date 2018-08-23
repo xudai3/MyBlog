@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xd.entity.Article;
 import com.xd.response.Response;
+import com.xd.response.StatusCode;
 import com.xd.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,19 +19,14 @@ public class MyBlogController {
 
     @RequestMapping(value = "/v1/users/{uid}/articles", method = RequestMethod.GET)
     public Response initMainPage(@PathVariable int uid){
-        System.out.println("Aricle List Init");
-        //User user = (User) WebUtils.getSessionAttribute(request,"user");
-        List<Article> articles = articleService.findArticleByUserId(uid);
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonRes = null;
-        Response resp = new Response();
-        try {
-            jsonRes = mapper.writeValueAsString(articles);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        System.out.println(jsonRes);
+        System.out.println("Article List Init...");
 
-        return resp.success(jsonRes);
+        Response resp = new Response();
+
+        List<Article> articles = articleService.listArticlesByUserId(uid);
+
+        if(articles.isEmpty()){
+            return resp.failure(StatusCode.RESULE_DATA_NONE);
+        }else return resp.success(articles);
     }
 }

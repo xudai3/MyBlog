@@ -27,7 +27,10 @@
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
-    <context:property-placeholder location="classpath:dbcp.properties"/>
+    <context:property-placeholder location="classpath:*.properties"/>
+    <!--context:property-placeholder location="classpath:redis.properties"/-->
+
+    <import resource="classpath:spring-redis.xml"/>
 
 
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"

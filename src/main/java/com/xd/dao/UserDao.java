@@ -13,15 +13,18 @@ import java.util.List;
 
 @Repository
 public interface UserDao {
-//    @Autowired
-//    private JdbcTemplate jdbcTemplate;
 
-    int getMatchCount(User user);
+    int countMatchLoginUser(User user);
+
     User getUserByUserId(int userId);
+
     User getUserByUserName(String userName);
-    int addUser(User user);
-    List<User> getUserList();
-    int updateLoginInfo(User user);
+
+    boolean saveUser(User user);
+
+    List<User> listUsers();
+
+    boolean updateLoginInfo(User user);
 
 
 

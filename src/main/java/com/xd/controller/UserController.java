@@ -6,7 +6,9 @@ import com.xd.entity.User;
 import com.xd.response.Response;
 import com.xd.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.List;
 
@@ -20,16 +22,9 @@ public class UserController {
     @RequestMapping(value = "/v1/users/{uid}", method = RequestMethod.GET)
     public Response getUserInfo(@PathVariable int uid){
         System.out.println("getting user info...");
+
         Response resp = new Response();
         User getUser = userService.getUserByUserId(uid);
-//        ObjectMapper mapper = new ObjectMapper();
-//        String res = null;
-//
-//        try {
-//            res = mapper.writeValueAsString(getUser);
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
 
         return resp.success(getUser);
     }
@@ -37,8 +32,9 @@ public class UserController {
     @RequestMapping(value = "/v1/users", method = RequestMethod.POST)
     public Response addUser(@RequestBody User user){
         System.out.println("adding user...");
+
         Response resp = new Response();
-        userService.addUser(user);
+        userService.saveUser(user);
 
         return resp.success();
     }
@@ -61,10 +57,9 @@ public class UserController {
     public Response getUserList(){
         System.out.println("getting user list...");
         Response resp = new Response();
-        List<User> userList = userService.getUserList();
+        List<User> userList = userService.listUsers();
         System.out.println(resp.success(userList).toString());
         return resp.success(userList);
-
     }
 
 }

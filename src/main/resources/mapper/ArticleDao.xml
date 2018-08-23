@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xd.dao.ArticleDao">
+    <select id="listArticlesByUserId" resultType="Article">
+        SELECT * FROM t_article
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="getArticleByArticleId" resultType="Article">
+        SELECT * FROM t_article
+        WHERE article_id = #{articleId}
+    </select>
+
+    <select id="listArticlesByTag" resultType="Article">
+        SELECT * FROM t_article
+        WHERE tag_id = #{tagId}
+    </select>
+
+    <insert id="saveArticle" parameterType="Article">
+        INSERT INTO t_article(article_title,
+        article_content,
+        article_author,
+        article_status,
+        user_id,
+        create_date)
+        VALUES (#{articleTitle},
+        #{articleContent},
+        #{articleAuthor},
+        #{articleStatus},
+        #{userId},
+        #{createDate})
+    </insert>
+
+    <delete id="removeArticleByArticleId" parameterType="int">
+        DELETE FROM t_article WHERE article_id = #{articleId}
+    </delete>
+
+    <update id="updateArticle" parameterType="Article">
+        UPDATE t_article SET
+            article_title = #{articleTitle},
+            article_content = #{articleContent},
+            article_status = #{articleStatus},
+            change_date = #{changeDate}
+        WHERE article_id = #{articleId}
+    </update>
+</mapper>
